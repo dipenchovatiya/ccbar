@@ -6,7 +6,6 @@ Lightweight, configurable Claude Code statusline with a color-coded context bar.
 ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-blue)
 ![Shell](https://img.shields.io/badge/shell-bash-green)
 
-<!-- TODO: Replace with actual terminal screenshot -->
 ![ccbar demo](screenshots/demo.png)
 
 ## Install
@@ -23,6 +22,7 @@ That's it. Start a new Claude Code session to see the statusline.
 |--------|-------|---------------|
 | Git branch | Purple | Current branch name (truncated at 20 chars) |
 | Git status | Salmon | Staged (S:n), unstaged (U:n), untracked (A:n) file counts |
+| Git sync | Orange | Commits ahead (↑n) or behind (↓n) tracking branch |
 | Worktree | Tan | Active worktree name (hidden when not in a worktree) |
 | Folder | Cyan | Current working directory basename |
 | Context bar | Blue / Gray | Visual fill bar showing context window usage |

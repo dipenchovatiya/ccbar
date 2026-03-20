@@ -16,7 +16,7 @@ Two scripts, one config:
 
 ## Key Design Decisions
 
-- **Config loading uses a `case` allowlist, not `source`** — only `SHOW_*`, `BAR_WIDTH`, `THRESHOLD_*`, `COLOR_*`, `SEPARATOR`, and `BRANCH_MAX_LEN` keys are accepted. Any change to config keys must update both `config.default` and the `case` statement in `ccbar.sh:57`.
+- **Config loading uses a `case` allowlist, not `source`** — only `SHOW_*`, `BAR_WIDTH`, `THRESHOLD_*`, `COLOR_*`, `SEPARATOR`, and `BRANCH_MAX_LEN` keys are accepted. Any change to config keys must update both `config.default` and the `case` statement in `ccbar.sh`.
 - **ANSI 256-color codes** — all colors are configured as integers (e.g., `COLOR_BRANCH=141`) and expanded into escape sequences at runtime.
 - **Token formatting uses `bc`** for division (see `fmt_k` function) — `bc` is a runtime dependency alongside `jq` and `git`.
 - **Install location**: script goes to `~/.claude/ccbar.sh`, config to `~/.config/ccbar/config`. The installer hardcodes `~/.claude/ccbar.sh` as the command path in settings.json.

@@ -13,6 +13,7 @@ SHOW_COST=true
 SHOW_DURATION=true
 SHOW_SPEED=true
 SHOW_WORKTREE=true
+SHOW_GIT_SYNC=true
 
 # Context bar
 BAR_WIDTH=20
@@ -28,6 +29,7 @@ COLOR_COST=114           # Green
 COLOR_DURATION=251       # Light gray
 COLOR_SPEED=111          # Light blue
 COLOR_WORKTREE=179       # Tan
+COLOR_GIT_SYNC=215       # Orange
 COLOR_BAR_FILL=75        # Blue
 COLOR_HEALTH_OK=114      # Green
 COLOR_HEALTH_MID=222     # Yellow

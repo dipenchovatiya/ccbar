@@ -26,6 +26,7 @@ SHOW_COST=true
 SHOW_DURATION=true
 SHOW_SPEED=true
 SHOW_WORKTREE=true
+SHOW_GIT_SYNC=true
 
 BAR_WIDTH=20
 THRESHOLD_MID=40
@@ -39,6 +40,7 @@ COLOR_COST=114
 COLOR_DURATION=251
 COLOR_SPEED=111
 COLOR_WORKTREE=179
+COLOR_GIT_SYNC=215
 COLOR_BAR_FILL=75
 COLOR_HEALTH_OK=114
 COLOR_HEALTH_MID=222
@@ -73,6 +75,7 @@ C_COST="\033[38;5;${COLOR_COST}m"
 C_DURATION="\033[38;5;${COLOR_DURATION}m"
 C_SPEED="\033[38;5;${COLOR_SPEED}m"
 C_WORKTREE="\033[38;5;${COLOR_WORKTREE}m"
+C_GITSYNC="\033[38;5;${COLOR_GIT_SYNC}m"
 C_BAR_FILL="\033[38;5;${COLOR_BAR_FILL}m"
 C_HEALTH_OK="\033[38;5;${COLOR_HEALTH_OK}m"
 C_HEALTH_MID="\033[38;5;${COLOR_HEALTH_MID}m"
@@ -174,6 +177,16 @@ if git -C "$CWD" rev-parse --is-inside-work-tree &>/dev/null; then
   [[ $U -gt 0 ]] && GIT_STAT+="U:$U "
   [[ $A -gt 0 ]] && GIT_STAT+="A:$A "
   GIT_STAT="${GIT_STAT% }"
+
+  # Ahead/behind tracking branch
+  GIT_SYNC=""
+  if upstream=$(git -C "$CWD" rev-parse --abbrev-ref '@{upstream}' 2>/dev/null); then
+    ahead=$(git -C "$CWD" rev-list --count '@{upstream}..HEAD' 2>/dev/null || echo 0)
+    behind=$(git -C "$CWD" rev-list --count 'HEAD..@{upstream}' 2>/dev/null || echo 0)
+    [[ $ahead -gt 0 ]] && GIT_SYNC+="↑$ahead "
+    [[ $behind -gt 0 ]] && GIT_SYNC+="↓$behind "
+    GIT_SYNC="${GIT_SYNC% }"
+  fi
 fi
 
 # -- Context bar --
@@ -227,6 +240,10 @@ if [[ "$SHOW_BRANCH" == "true" ]] && [[ -n "$BRANCH" ]]; then
   # Git status (salmon)
   if [[ "$SHOW_GIT_STATUS" == "true" ]] && [[ -n "$GIT_STAT" ]]; then
     out+=" ${C_GITSTATUS}${GIT_STAT}${RESET}"
+  fi
+  # Git sync — ahead/behind (orange)
+  if [[ "$SHOW_GIT_SYNC" == "true" ]] && [[ -n "$GIT_SYNC" ]]; then
+    out+=" ${C_GITSYNC}${GIT_SYNC}${RESET}"
   fi
   out+="${SEP}"
 fi
