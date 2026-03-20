@@ -1,0 +1,40 @@
+# ccbar configuration
+# Location: ~/.config/ccbar/config
+# Edit values below, changes take effect on next Claude Code turn.
+
+# Widgets (true/false)
+SHOW_BRANCH=true
+SHOW_GIT_STATUS=true
+SHOW_FOLDER=true
+SHOW_CONTEXT_BAR=true
+SHOW_TOKEN_COUNT=true
+SHOW_MODEL=true
+SHOW_COST=true
+SHOW_DURATION=true
+SHOW_SPEED=true
+SHOW_WORKTREE=true
+
+# Context bar
+BAR_WIDTH=20
+THRESHOLD_MID=40         # % where green → yellow
+THRESHOLD_HIGH=80        # % where yellow → red
+
+# Colors (ANSI 256 codes — see https://256colors.com)
+COLOR_BRANCH=141         # Purple
+COLOR_GIT_STATUS=209     # Salmon
+COLOR_FOLDER=117         # Cyan
+COLOR_MODEL=222          # Gold
+COLOR_COST=114           # Green
+COLOR_DURATION=251       # Light gray
+COLOR_SPEED=111          # Light blue
+COLOR_WORKTREE=179       # Tan
+COLOR_BAR_FILL=75        # Blue
+COLOR_HEALTH_OK=114      # Green
+COLOR_HEALTH_MID=222     # Yellow
+COLOR_HEALTH_BAD=196     # Red
+
+# Separator character
+SEPARATOR="│"
+
+# Max branch name length before truncation
+BRANCH_MAX_LEN=20
