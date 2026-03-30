@@ -54,8 +54,13 @@ load_config() {
   local cfg="${CCBAR_CONFIG:-$HOME/.config/ccbar/config}"
   [[ -f "$cfg" ]] || return
   while IFS='=' read -r key val; do
-    key="${key%%#*}"; key="${key// /}"
-    val="${val%%#*}"; val="${val// /}"
+    key="${key%%#*}"; key="${key#"${key%%[! ]*}"}"; key="${key%"${key##*[! ]}"}"
+    val="${val%%#*}"; val="${val#"${val%%[! ]*}"}"; val="${val%"${val##*[! ]}"}"
+    # Strip matched surrounding quotes (handles users writing KEY="value")
+    case "$val" in
+      \"*\") val="${val#\"}"; val="${val%\"}" ;;
+      \'*\') val="${val#\'}"; val="${val%\'}" ;;
+    esac
     case "$key" in
       SHOW_*|BAR_WIDTH|THRESHOLD_*|COLOR_*|SEPARATOR|BRANCH_MAX_LEN) printf -v "$key" '%s' "$val" ;;
     esac
@@ -129,15 +134,15 @@ if [[ -n "$DUR_MS" && "$DUR_MS" != "null" && "$DUR_MS" != "0" ]]; then
   fi
 fi
 
-# Token speed (total tokens / total API duration)
+# Token speed (output tokens / total API duration)
 API_MS=$(jv '.cost.total_api_duration_ms')
 INPUT_TOK=$(jv '.context_window.total_input_tokens')
 OUTPUT_TOK=$(jv '.context_window.total_output_tokens')
 SPEED=""
 if [[ -n "$API_MS" && "$API_MS" != "null" && "$API_MS" -gt 0 ]] 2>/dev/null; then
-  TOTAL_TOK=$(( ${INPUT_TOK:-0} + ${OUTPUT_TOK:-0} ))
-  if [[ $TOTAL_TOK -gt 0 ]]; then
-    TPS=$(( TOTAL_TOK * 1000 / API_MS ))
+  OUT_TOK=${OUTPUT_TOK:-0}
+  if [[ $OUT_TOK -gt 0 ]]; then
+    TPS=$(( OUT_TOK * 1000 / API_MS ))
     SPEED="${TPS} t/s"
   fi
 fi
@@ -199,7 +204,7 @@ fmt_k() {
   if [[ $n -ge 1000000 ]]; then
     printf "%.1fM" "$(echo "scale=1; $n/1000000" | bc)"
   elif [[ $n -ge 1000 ]]; then
-    printf "%.0fk" "$(echo "scale=0; $n/1000" | bc)"
+    printf "%.0fk" "$(echo "scale=1; $n/1000" | bc)"
   else
     printf "%d" "$n"
   fi

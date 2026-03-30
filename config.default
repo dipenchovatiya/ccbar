@@ -36,7 +36,7 @@ COLOR_HEALTH_MID=222     # Yellow
 COLOR_HEALTH_BAD=196     # Red
 
 # Separator character
-SEPARATOR="│"
+SEPARATOR=│
 
 # Max branch name length before truncation
 BRANCH_MAX_LEN=20

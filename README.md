@@ -31,7 +31,7 @@ That's it. Start a new Claude Code session to see the statusline.
 | Model | Gold | Model name from session data |
 | Cost | Green | Cumulative session cost in USD |
 | Duration | Light gray | Total session wall-clock time |
-| Speed | Light blue | Token throughput in tokens/second |
+| Speed | Light blue | Output token throughput in tokens/second |
 
 ## Configuration
 
@@ -89,7 +89,7 @@ Benchmark it yourself:
 
 ```bash
 echo '{"context_window":{"used_percentage":42,"context_window_size":200000,"total_input_tokens":80000,"total_output_tokens":4000},"model":"claude-sonnet-4-5","cost":{"total_cost_usd":0.12,"total_duration_ms":180000,"total_api_duration_ms":9000}}' \
-  | time bash ~/.local/share/ccbar/ccbar.sh
+  | time bash ~/.claude/ccbar.sh
 ```
 
 ## Requirements

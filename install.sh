@@ -164,7 +164,7 @@ fi
 # -- Update ~/.claude/settings.json -----------------------------------------
 
 printf "\n"
-STATUS_LINE_JSON='{"type":"command","command":"~/.claude/ccbar.sh"}'
+STATUS_LINE_JSON=$(jq -n --arg cmd "$CCBAR_SCRIPT" '{"type":"command","command":$cmd}')
 
 if [[ -f "$SETTINGS_FILE" ]]; then
   # Back up the current statusLine value (may be null if key absent)
@@ -177,8 +177,7 @@ if [[ -f "$SETTINGS_FILE" ]]; then
   ok "Updated statusLine in $SETTINGS_FILE"
 else
   mkdir -p "$CLAUDE_DIR"
-  printf '{"statusLine":{"type":"command","command":"~/.claude/ccbar.sh"}}' \
-    | jq . > "$SETTINGS_FILE"
+  jq -n --argjson sl "$STATUS_LINE_JSON" '{"statusLine":$sl}' > "$SETTINGS_FILE"
   ok "Created $SETTINGS_FILE with statusLine"
 fi
 
