@@ -202,7 +202,10 @@ CTX_SIZE=${CTX_SIZE:-200000}
 fmt_k() {
   local n=$1
   if [[ $n -ge 1000000 ]]; then
-    printf "%.1fM" "$(echo "scale=1; $n/1000000" | bc)"
+    # scale=3 so printf does the rounding; bc truncates, and at scale=1 that
+    # turned 48.58M into 48.5M. The k branch below is unaffected because %.0f
+    # already rounds bc's single decimal.
+    printf "%.1fM" "$(echo "scale=3; $n/1000000" | bc)"
   elif [[ $n -ge 1000 ]]; then
     printf "%.0fk" "$(echo "scale=1; $n/1000" | bc)"
   else
@@ -210,8 +213,13 @@ fmt_k() {
   fi
 }
 
-# Total used tokens (from percentage * window size)
-USED_TOK=$(( USED_PCT * CTX_SIZE / 100 ))
+# Total used tokens. Prefer the exact count Claude Code reports; fall back to
+# deriving it from the integer percentage when the field is absent.
+if [[ -n "$INPUT_TOK" && "$INPUT_TOK" != "null" && "$INPUT_TOK" -gt 0 ]] 2>/dev/null; then
+  USED_TOK=$INPUT_TOK
+else
+  USED_TOK=$(( USED_PCT * CTX_SIZE / 100 ))
+fi
 
 # Health color for percentage
 if [[ "$USED_PCT" -lt "$THRESHOLD_MID" ]]; then
@@ -231,7 +239,7 @@ bar+="${C_BAR_EMPTY:-\033[38;5;240m}"
 for ((i=0; i<ec; i++)); do bar+="${EMPTY}"; done
 bar+="${HC}] ${USED_PCT}%"
 if [[ "$SHOW_TOKEN_COUNT" == "true" ]]; then
-  bar+=" ${DIM}($(fmt_k $USED_TOK)/$(fmt_k $CTX_SIZE))"
+  bar+=" ${DIM}($(fmt_k "$USED_TOK")/$(fmt_k "$CTX_SIZE"))"
 fi
 bar+="${RESET}"
 
